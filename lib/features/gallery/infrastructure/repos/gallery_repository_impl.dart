@@ -85,14 +85,25 @@ class GalleryRepositoryImpl implements GalleryRepository {
     if (await networkInfo.isConnected) {
       try {
         final photo = await remoteDataSource.getPhotoDetails(id);
+        await localDataSource.cachePhoto(photo);
+        AppLogger.network('Fetched and cached photo detail #$id');
         return Right(photo);
       } on ServerException catch (e) {
+        AppLogger.error('Server error fetching photo #$id', error: e);
         return Left(ServerFailure(e.message, statusCode: e.statusCode));
       } on NetworkException {
+        AppLogger.warning('Network exception fetching photo #$id');
         return const Left(NetworkFailure());
       }
     } else {
-      return const Left(NetworkFailure());
+      try {
+        final cached = await localDataSource.getCachedPhoto(id);
+        AppLogger.info('Loaded photo #$id from cache');
+        return Right(cached);
+      } on CacheException {
+        AppLogger.warning('No cached data for photo #$id');
+        return const Left(NetworkFailure());
+      }
     }
   }
 }

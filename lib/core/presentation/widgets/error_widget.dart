@@ -50,7 +50,7 @@ class AppErrorWidget extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 40),
               child: Text(
-                'There is no pictures.\nPlease come back later.',
+                message,
                 textAlign: TextAlign.center,
                 style: const TextStyle(
                   fontSize: 12,

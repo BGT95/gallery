@@ -21,7 +21,6 @@ dependencies:
 
   # Dependency Injection
   get_it: ^8.0.3
-  injectable: ^2.5.0
 
   # Image Caching
   cached_network_image: ^3.4.1
