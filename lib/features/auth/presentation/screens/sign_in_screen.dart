@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:go_router/go_router.dart';
+import 'package:webant_gallery/core/presentation/router/app_router.dart';
 import 'package:webant_gallery/core/presentation/theme/app_theme.dart';
 import 'package:webant_gallery/core/presentation/widgets/custom_button.dart';
-import 'package:webant_gallery/features/auth/domain/repos/auth_repository.dart';
-import 'package:webant_gallery/features/auth/presentation/screens/sign_up_screen.dart';
 import 'package:webant_gallery/core/presentation/widgets/custom_text_field.dart';
+import 'package:webant_gallery/features/auth/domain/repos/auth_repository.dart';
 import 'package:webant_gallery/features/auth/presentation/widgets/gradient_title.dart';
-import 'package:webant_gallery/features/gallery/presentation/screens/home/home_page.dart';
 import 'package:webant_gallery/gen/assets.gen.dart';
 
 class SignInScreen extends StatefulWidget {
@@ -57,12 +57,7 @@ class _SignInScreenState extends State<SignInScreen> {
           _error = failure.message;
         });
       },
-      (_) {
-        Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (_) => const HomePage()),
-          (route) => false,
-        );
-      },
+      (_) => context.go(AppRoutes.home),
     );
   }
 
@@ -78,7 +73,7 @@ class _SignInScreenState extends State<SignInScreen> {
             size: 24,
             color: AppColors.searchPlaceholder,
           ),
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () => context.pop(),
         ),
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(1.0),
@@ -126,9 +121,7 @@ class _SignInScreenState extends State<SignInScreen> {
               SizedBox(
                 width: 163,
                 child: CustomButton(
-                  onPressed: () => Navigator.of(context).push(
-                    MaterialPageRoute(builder: (_) => const SignUpScreen()),
-                  ),
+                  onPressed: () => context.push(AppRoutes.signUp),
                   text: 'Sign Up',
                   isLoading: _isLoading,
                   noBorder: true,

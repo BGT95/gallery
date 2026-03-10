@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:webant_gallery/core/presentation/router/app_router.dart';
 import 'package:webant_gallery/core/presentation/theme/app_theme.dart';
 import 'package:webant_gallery/core/presentation/widgets/error_widget.dart';
 import 'package:webant_gallery/core/presentation/widgets/no_connection_widget.dart';
 import 'package:webant_gallery/features/gallery/presentation/bloc/photo_list_bloc.dart';
 import 'package:webant_gallery/features/gallery/presentation/bloc/photo_list_event.dart';
 import 'package:webant_gallery/features/gallery/presentation/bloc/photo_list_state.dart';
-import 'package:webant_gallery/features/gallery/presentation/screens/photo_detail/photo_detail_page.dart';
 import 'package:webant_gallery/features/gallery/presentation/widgets/photo_grid_item.dart';
 
 class PhotoListPage extends StatefulWidget {
@@ -158,13 +159,7 @@ class _PhotoGridState extends State<_PhotoGrid> {
                 final photo = widget.photos[index];
                 return PhotoGridItem(
                   photo: photo,
-                  onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (_) => PhotoDetailPage(photoId: photo.id),
-                      ),
-                    );
-                  },
+                  onTap: () => context.push(AppRoutes.photoDetailPath(photo.id)),
                 );
               },
               childCount: widget.photos.length,

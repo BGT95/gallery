@@ -36,6 +36,9 @@ dependencies:
   # Functional programming helpers
   dartz: ^0.10.1
 
+  # Navigation
+  go_router: ^14.8.1
+
   # UI
   flutter_svg: ^2.2.3
 

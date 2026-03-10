@@ -2,9 +2,11 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
+import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:webant_gallery/core/infrastructure/network/auth_interceptor.dart';
 import 'package:webant_gallery/core/infrastructure/network/network_info.dart';
+import 'package:webant_gallery/core/presentation/router/app_router.dart';
 import 'package:webant_gallery/core/utils/api_constants.dart';
 import 'package:webant_gallery/core/utils/logger.dart';
 import 'package:webant_gallery/features/auth/domain/repos/auth_repository.dart';
@@ -79,4 +81,6 @@ Future<void> init() async {
       networkInfo: sl(),
     ),
   );
+
+  sl.registerLazySingleton<GoRouter>(() => createRouter());
 }

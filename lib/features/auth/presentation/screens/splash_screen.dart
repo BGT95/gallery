@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
-import 'package:webant_gallery/features/auth/infrastructure/repos/token_manager.dart';
-import 'package:webant_gallery/features/auth/presentation/screens/welcome_screen.dart';
-import 'package:webant_gallery/features/gallery/presentation/screens/home/home_page.dart';
+import 'package:go_router/go_router.dart';
+import 'package:webant_gallery/core/presentation/router/app_router.dart';
 import 'package:webant_gallery/gen/assets.gen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -16,21 +14,13 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    _navigate();
+    _navigateAfterDelay();
   }
 
-  Future<void> _navigate() async {
+  Future<void> _navigateAfterDelay() async {
     await Future.delayed(const Duration(seconds: 2));
     if (!mounted) return;
-
-    final tokenManager = GetIt.I<TokenManager>();
-    final destination = tokenManager.isAuthenticated
-        ? const HomePage()
-        : const WelcomeScreen();
-
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (_) => destination),
-    );
+    context.go(AppRoutes.root);
   }
 
   @override

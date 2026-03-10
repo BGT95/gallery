@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:go_router/go_router.dart';
+import 'package:webant_gallery/core/presentation/router/app_router.dart';
 import 'package:webant_gallery/core/presentation/theme/app_theme.dart';
-import 'package:webant_gallery/features/auth/domain/repos/auth_repository.dart';
-import 'package:webant_gallery/features/auth/presentation/screens/sign_in_screen.dart';
-import 'package:webant_gallery/core/presentation/widgets/custom_text_field.dart';
 import 'package:webant_gallery/core/presentation/widgets/custom_button.dart';
+import 'package:webant_gallery/core/presentation/widgets/custom_text_field.dart';
+import 'package:webant_gallery/features/auth/domain/repos/auth_repository.dart';
 import 'package:webant_gallery/features/auth/presentation/widgets/gradient_title.dart';
-import 'package:webant_gallery/features/gallery/presentation/screens/home/home_page.dart';
 import 'package:webant_gallery/gen/assets.gen.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -113,12 +113,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           _error = failure.message;
         });
       },
-      (_) {
-        Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (_) => const HomePage()),
-          (route) => false,
-        );
-      },
+      (_) => context.go(AppRoutes.home),
     );
   }
 
@@ -134,7 +129,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             size: 24,
             color: AppColors.searchPlaceholder,
           ),
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () => context.pop(),
         ),
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(1.0),
@@ -148,7 +143,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(height: 40),
-              GradientTitle(text: 'Sign Up'),
+              const GradientTitle(text: 'Sign Up'),
               const SizedBox(height: 60),
               CustomTextField(
                 controller: _nameController,
@@ -215,16 +210,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
               SizedBox(
                 width: 163,
                 child: CustomButton(
-                  onPressed: () {
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (_) => const SignInScreen()),
-                    );
-                  }, 
+                  onPressed: () => context.go(AppRoutes.signIn),
                   text: 'Sign In',
                   isLoading: _isLoading,
                   noBorder: true,
                 ),
-              ),              
+              ),
               const SizedBox(height: 40),
             ],
           ),

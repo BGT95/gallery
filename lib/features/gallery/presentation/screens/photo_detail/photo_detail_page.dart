@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:go_router/go_router.dart';
 import 'package:webant_gallery/core/presentation/theme/app_theme.dart';
 import 'package:webant_gallery/core/presentation/widgets/error_widget.dart';
 import 'package:webant_gallery/core/presentation/widgets/no_connection_widget.dart';
@@ -27,7 +28,7 @@ class PhotoDetailPage extends StatelessWidget {
           backgroundColor: AppColors.surface,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back, size: 24),
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: () => context.pop(),
           ),
           title: BlocBuilder<PhotoDetailBloc, PhotoDetailState>(
             builder: (context, state) {

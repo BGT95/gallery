@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-
+import 'package:go_router/go_router.dart';
+import 'package:webant_gallery/core/presentation/router/app_router.dart';
 import 'package:webant_gallery/core/presentation/theme/app_theme.dart';
-import 'package:webant_gallery/features/auth/presentation/screens/sign_in_screen.dart';
-import 'package:webant_gallery/features/auth/presentation/screens/sign_up_screen.dart';
-import 'package:webant_gallery/gen/assets.gen.dart';
 import 'package:webant_gallery/core/presentation/widgets/custom_button.dart';
+import 'package:webant_gallery/gen/assets.gen.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
@@ -32,19 +31,15 @@ class WelcomeScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 80),
                 CustomButton(
-                  onPressed: () => Navigator.of(context).push(
-                    MaterialPageRoute(builder: (_) => const SignUpScreen()),
-                  ),
+                  onPressed: () => context.push(AppRoutes.signUp),
                   text: 'Create an account',
                   filled: true,
                 ),
                 const SizedBox(height: 20),
                 CustomButton(
-                  onPressed: () => Navigator.of(context).push(
-                    MaterialPageRoute(builder: (_) => const SignInScreen()),
-                  ),
+                  onPressed: () => context.push(AppRoutes.signIn),
                   text: 'I already have an account',
-                ),                
+                ),
               ],
             ),
           ),
