@@ -56,9 +56,6 @@ class AppTheme {
     ),
     progressIndicatorTheme: const ProgressIndicatorThemeData(
       color: AppColors.textSecondary,
-    ),
-    elevatedButtonTheme: ElevatedButtonThemeData(
-
-    ),
+    ),    
   );
 }
