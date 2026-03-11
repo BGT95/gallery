@@ -4,6 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:webant_gallery/gen/assets.gen.dart';
 import 'package:webant_gallery/core/presentation/theme/app_theme.dart';
 import 'package:webant_gallery/core/presentation/widgets/offline_banner.dart';
+import 'package:webant_gallery/core/presentation/widgets/under_development_page.dart';
 import 'package:webant_gallery/features/gallery/domain/repos/gallery_repository.dart';
 import 'package:webant_gallery/features/gallery/presentation/bloc/photo_list_bloc.dart';
 import 'package:webant_gallery/features/gallery/presentation/screens/photo_list/photo_list_page.dart';
@@ -43,34 +44,46 @@ class _HomePageState extends State<HomePage>
         child: Column(
           children: [
             const OfflineBanner(),
-            _buildSearchBar(),
-            _buildTabs(),
-            Expanded(
-              child: TabBarView(
-                controller: _tabController,
-                children: [
-                  BlocProvider(
-                    create: (_) => PhotoListBloc(
-                      repository: GetIt.I<GalleryRepository>(),
-                      type: PhotoListType.newPhotos,
-                    ),
-                    child: const PhotoListPage(),
-                  ),
-                  BlocProvider(
-                    create: (_) => PhotoListBloc(
-                      repository: GetIt.I<GalleryRepository>(),
-                      type: PhotoListType.popularPhotos,
-                    ),
-                    child: const PhotoListPage(),
-                  ),
-                ],
-              ),
-            ),
+            if (_bottomNavIndex == 0) ...[
+              _buildSearchBar(),
+              _buildTabs(),
+            ],
+            Expanded(child: _buildBody()),
           ],
         ),
       ),
       bottomNavigationBar: _buildBottomNav(),
     );
+  }
+
+  Widget _buildBody() {
+    switch (_bottomNavIndex) {
+      case 0:
+        return TabBarView(
+          controller: _tabController,
+          children: [
+            BlocProvider(
+              create: (_) => PhotoListBloc(
+                repository: GetIt.I<GalleryRepository>(),
+                type: PhotoListType.newPhotos,
+              ),
+              child: const PhotoListPage(),
+            ),
+            BlocProvider(
+              create: (_) => PhotoListBloc(
+                repository: GetIt.I<GalleryRepository>(),
+                type: PhotoListType.popularPhotos,
+              ),
+              child: const PhotoListPage(),
+            ),
+          ],
+        );
+      case 1:
+      case 2:
+        return const UnderDevelopmentPage();
+      default:
+        return const SizedBox.shrink();
+    }
   }
 
   Widget _buildSearchBar() {
