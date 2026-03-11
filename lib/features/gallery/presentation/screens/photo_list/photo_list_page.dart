@@ -5,6 +5,7 @@ import 'package:webant_gallery/core/presentation/router/app_router.dart';
 import 'package:webant_gallery/core/presentation/theme/app_theme.dart';
 import 'package:webant_gallery/core/presentation/widgets/error_widget.dart';
 import 'package:webant_gallery/core/presentation/widgets/no_connection_widget.dart';
+import 'package:webant_gallery/features/gallery/domain/entities/photo.dart';
 import 'package:webant_gallery/features/gallery/presentation/bloc/photo_list_bloc.dart';
 import 'package:webant_gallery/features/gallery/presentation/bloc/photo_list_event.dart';
 import 'package:webant_gallery/features/gallery/presentation/bloc/photo_list_state.dart';
@@ -101,7 +102,7 @@ class _PhotoListPageState extends State<PhotoListPage>
 }
 
 class _PhotoGrid extends StatefulWidget {
-  final List photos;
+  final List<Photo> photos;
   final bool hasMore;
   final bool isLoadingMore;
   final VoidCallback onLoadMore;
