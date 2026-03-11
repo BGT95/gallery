@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
-import 'package:webant_gallery/features/auth/infrastructure/repos/token_manager.dart';
+import 'package:webant_gallery/features/auth/domain/repos/auth_repository.dart';
 import 'package:webant_gallery/features/auth/presentation/screens/sign_in_screen.dart';
 import 'package:webant_gallery/features/auth/presentation/screens/sign_up_screen.dart';
 import 'package:webant_gallery/features/auth/presentation/screens/splash_screen.dart';
@@ -32,12 +32,12 @@ abstract class AppRoutes {
 }
 
 GoRouter createRouter() {
-  final tokenManager = GetIt.I<TokenManager>();
+  final authRepository = GetIt.I<AuthRepository>();
 
   return GoRouter(
     initialLocation: AppRoutes.splash,
     redirect: (BuildContext context, GoRouterState state) {
-      final isAuthenticated = tokenManager.isAuthenticated;
+      final isAuthenticated = authRepository.isAuthenticated;
       final location = state.matchedLocation;
 
       if (location == AppRoutes.splash) return null;

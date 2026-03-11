@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 
 class OfflineBanner extends StatefulWidget {
   const OfflineBanner({super.key});
@@ -12,6 +13,7 @@ class OfflineBanner extends StatefulWidget {
 
 class _OfflineBannerState extends State<OfflineBanner>
     with SingleTickerProviderStateMixin {
+  final Connectivity _connectivity = GetIt.I<Connectivity>();
   late final StreamSubscription<List<ConnectivityResult>> _subscription;
   late final AnimationController _animController;
   late final Animation<double> _slideAnimation;
@@ -29,7 +31,7 @@ class _OfflineBannerState extends State<OfflineBanner>
       CurvedAnimation(parent: _animController, curve: Curves.easeOut),
     );
 
-    _subscription = Connectivity().onConnectivityChanged.listen((result) {
+    _subscription = _connectivity.onConnectivityChanged.listen((result) {
       final offline = result.contains(ConnectivityResult.none);
       if (offline != _isOffline) {
         setState(() => _isOffline = offline);
@@ -41,7 +43,7 @@ class _OfflineBannerState extends State<OfflineBanner>
       }
     });
 
-    Connectivity().checkConnectivity().then((result) {
+    _connectivity.checkConnectivity().then((result) {
       if (result.contains(ConnectivityResult.none)) {
         setState(() => _isOffline = true);
         _animController.forward();
