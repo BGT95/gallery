@@ -28,7 +28,7 @@ class GalleryRepositoryImpl implements GalleryRepository {
   }) async {
     return _getPhotos(
       remote: () => remoteDataSource.getNewPhotos(page: page, limit: limit),
-      cacheKey: GalleryLocalDataSourceImpl.keyForNew(page),
+      cacheKey: localDataSource.keyForNew(page),
     );
   }
 
@@ -39,7 +39,7 @@ class GalleryRepositoryImpl implements GalleryRepository {
   }) async {
     return _getPhotos(
       remote: () => remoteDataSource.getPopularPhotos(page: page, limit: limit),
-      cacheKey: GalleryLocalDataSourceImpl.keyForPopular(page),
+      cacheKey: localDataSource.keyForPopular(page),
     );
   }
 

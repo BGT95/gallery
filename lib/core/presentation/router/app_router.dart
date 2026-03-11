@@ -84,7 +84,8 @@ GoRouter createRouter() {
       GoRoute(
         path: AppRoutes.photoDetail,
         builder: (context, state) {
-          final id = int.parse(state.pathParameters['id']!);
+          final id = int.tryParse(state.pathParameters['id'] ?? '');
+          if (id == null) return const Scaffold(body: Center(child: Text('Invalid photo ID')));
           return PhotoDetailPage(photoId: id);
         },
       ),

@@ -1,7 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:webant_gallery/core/domain/failures.dart';
-import 'package:webant_gallery/core/utils/api_constants.dart';
 import 'package:webant_gallery/features/gallery/domain/entities/photo.dart';
 import 'package:webant_gallery/features/gallery/domain/entities/photos_page.dart';
 import 'package:webant_gallery/features/gallery/domain/repos/gallery_repository.dart';
@@ -13,9 +12,13 @@ enum PhotoListType { newPhotos, popularPhotos }
 class PhotoListBloc extends Bloc<PhotoListEvent, PhotoListState> {
   final GalleryRepository repository;
   final PhotoListType type;
+  final int itemsPerPage;
 
-  PhotoListBloc({required this.repository, required this.type})
-      : super(const PhotoListState()) {
+  PhotoListBloc({
+    required this.repository,
+    required this.type,
+    this.itemsPerPage = 10,
+  }) : super(const PhotoListState()) {
     on<PhotoListFetched>(_onFetched);
     on<PhotoListRefreshed>(_onRefreshed);
     on<PhotoListNextPage>(_onNextPage);
@@ -57,7 +60,7 @@ class PhotoListBloc extends Bloc<PhotoListEvent, PhotoListState> {
     Emitter<PhotoListState> emit, {
     required bool isRefresh,
   }) async {
-    final int limit = ApiConstants.itemsPerPage;
+    final int limit = itemsPerPage;
 
     final Either<Failure, PhotosPage> result =
         type == PhotoListType.newPhotos

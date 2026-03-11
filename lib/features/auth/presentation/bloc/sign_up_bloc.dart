@@ -25,11 +25,20 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
 
     emit(state.copyWith(status: SignUpStatus.loading));
 
+    final birthday = event.birthday;
+    if (birthday == null) {
+      emit(state.copyWith(
+        status: SignUpStatus.failure,
+        errorMessage: 'Укажите дату рождения',
+      ));
+      return;
+    }
+
     final result = await repository.signUp(
       email: event.email.trim(),
       password: event.password,
       displayName: event.displayName.trim(),
-      birthday: event.birthday!,
+      birthday: birthday,
       phone: event.phone?.trim().isNotEmpty == true ? event.phone!.trim() : null,
     );
 
@@ -43,15 +52,15 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
   }
 
   String? _validate(SignUpSubmitted event) {
-    if (event.displayName.trim().isEmpty) return 'Enter your name';
-    if (event.birthday == null) return 'Select your birthday';
-    if (event.email.trim().isEmpty) return 'Enter your email';
-    if (event.password.isEmpty) return 'Enter a password';
+    if (event.displayName.trim().isEmpty) return 'Введите имя';
+    if (event.birthday == null) return 'Укажите дату рождения';
+    if (event.email.trim().isEmpty) return 'Введите email';
+    if (event.password.isEmpty) return 'Введите пароль';
     if (event.password.length < 8) {
-      return 'Password must be at least 8 characters';
+      return 'Пароль должен быть не менее 8 символов';
     }
     if (event.password != event.confirmPassword) {
-      return 'Passwords do not match';
+      return 'Пароли не совпадают';
     }
     return null;
   }

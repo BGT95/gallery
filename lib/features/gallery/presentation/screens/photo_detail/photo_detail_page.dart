@@ -1,11 +1,13 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:webant_gallery/core/presentation/theme/app_theme.dart';
+import 'package:webant_gallery/core/presentation/widgets/app_cached_image.dart';
+import 'package:webant_gallery/core/presentation/widgets/app_loading_indicator.dart';
 import 'package:webant_gallery/core/presentation/widgets/error_widget.dart';
 import 'package:webant_gallery/core/presentation/widgets/no_connection_widget.dart';
+import 'package:webant_gallery/core/utils/date_formatter.dart';
 import 'package:webant_gallery/features/gallery/domain/repos/gallery_repository.dart';
 import 'package:webant_gallery/features/gallery/presentation/bloc/photo_detail_bloc.dart';
 import 'package:webant_gallery/features/gallery/presentation/bloc/photo_detail_event.dart';
@@ -46,13 +48,7 @@ class PhotoDetailPage extends StatelessWidget {
         body: BlocBuilder<PhotoDetailBloc, PhotoDetailState>(
           builder: (context, state) {
             if (state.status == PhotoDetailStatus.loading) {
-              return const Center(
-                child: SizedBox(
-                  width: 36,
-                  height: 36,
-                  child: CircularProgressIndicator(strokeWidth: 3),
-                ),
-              );
+              return const AppLoadingIndicator();
             }
 
             if (state.status == PhotoDetailStatus.noConnection) {
@@ -83,24 +79,10 @@ class PhotoDetailPage extends StatelessWidget {
                     tag: 'photo_${photo.id}',
                     child: AspectRatio(
                       aspectRatio: 360 / 240,
-                      child: CachedNetworkImage(
+                      child: AppCachedImage(
                         imageUrl: photo.fullImageUrl,
-                        fit: BoxFit.cover,
                         width: double.infinity,
-                        placeholder: (_, __) => Container(
-                          color: AppColors.searchBackground,
-                          child: const Center(
-                            child: CircularProgressIndicator(strokeWidth: 2),
-                          ),
-                        ),
-                        errorWidget: (_, __, ___) => Container(
-                          color: AppColors.searchBackground,
-                          child: const Icon(
-                            Icons.broken_image_outlined,
-                            size: 48,
-                            color: AppColors.textSecondary,
-                          ),
-                        ),
+                        iconSize: 48,
                       ),
                     ),
                   ),
@@ -135,7 +117,7 @@ class PhotoDetailPage extends StatelessWidget {
                               ),
                             if (photo.dateCreate != null)
                               Text(
-                                _formatDate(photo.dateCreate!),
+                                photo.dateCreate!.formatDayMonthYear(),
                                 style: const TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.w400,
@@ -170,9 +152,4 @@ class PhotoDetailPage extends StatelessWidget {
     );
   }
 
-  String _formatDate(DateTime date) {
-    return '${date.day.toString().padLeft(2, '0')}.'
-        '${date.month.toString().padLeft(2, '0')}.'
-        '${date.year}';
-  }
 }

@@ -57,7 +57,7 @@ Future<void> init() async {
       receiveTimeout: ApiConstants.receiveTimeout,
     ),
   );
-  apiDio.interceptors.add(AuthInterceptor(sl<TokenManager>()));
+  apiDio.interceptors.add(AuthInterceptor(sl<TokenManager>(), apiDio));
   if (kDebugMode) {
     apiDio.interceptors.add(
       LogInterceptor(requestBody: true, responseBody: false),

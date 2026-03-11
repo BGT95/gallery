@@ -17,7 +17,7 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
     if (event.email.isEmpty || event.password.isEmpty) {
       emit(state.copyWith(
         status: SignInStatus.failure,
-        errorMessage: 'Please fill in all fields',
+        errorMessage: 'Заполните все поля',
       ));
       return;
     }

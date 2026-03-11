@@ -4,8 +4,10 @@ import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:webant_gallery/core/presentation/router/app_router.dart';
 import 'package:webant_gallery/core/presentation/theme/app_theme.dart';
+import 'package:webant_gallery/core/presentation/widgets/auth_app_bar.dart';
 import 'package:webant_gallery/core/presentation/widgets/custom_button.dart';
 import 'package:webant_gallery/core/presentation/widgets/custom_text_field.dart';
+import 'package:webant_gallery/core/utils/date_formatter.dart';
 import 'package:webant_gallery/features/auth/domain/repos/auth_repository.dart';
 import 'package:webant_gallery/features/auth/presentation/bloc/sign_up_bloc.dart';
 import 'package:webant_gallery/features/auth/presentation/bloc/sign_up_event.dart';
@@ -76,10 +78,7 @@ class _SignUpViewState extends State<_SignUpView> {
     if (date != null) {
       setState(() {
         _selectedBirthday = date;
-        _birthdayController.text =
-            '${date.day.toString().padLeft(2, '0')}.'
-            '${date.month.toString().padLeft(2, '0')}.'
-            '${date.year}';
+        _birthdayController.text = date.formatDayMonthYear();
       });
     }
   }
@@ -105,21 +104,7 @@ class _SignUpViewState extends State<_SignUpView> {
       },
       child: Scaffold(
         backgroundColor: AppColors.background,
-        appBar: AppBar(
-          backgroundColor: AppColors.surface,
-          leading: IconButton(
-            icon: const Icon(
-              Icons.arrow_back_outlined,
-              size: 24,
-              color: AppColors.searchPlaceholder,
-            ),
-            onPressed: () => context.pop(),
-          ),
-          bottom: PreferredSize(
-            preferredSize: Size.fromHeight(1.0),
-            child: Container(color: AppColors.disabledText, height: 1.0),
-          ),
-        ),
+        appBar: const AuthAppBar(),
         body: SafeArea(
           child: SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: 16),

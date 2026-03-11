@@ -6,6 +6,8 @@ import 'package:webant_gallery/core/infrastructure/local/hive_service.dart';
 import 'package:webant_gallery/features/gallery/infrastructure/models/photo_model.dart';
 
 abstract class GalleryLocalDataSource {
+  String keyForNew(int page);
+  String keyForPopular(int page);
   Future<List<PhotoModel>> getCachedPhotos(String key);
   Future<void> cachePhotos(String key, List<PhotoModel> photos);
   Future<PhotoModel> getCachedPhoto(int id);
@@ -23,9 +25,13 @@ class GalleryLocalDataSourceImpl implements GalleryLocalDataSource {
 
   static const _photoDetailKey = 'cached_photo_detail';
 
-  static String keyForNew(int page) => '${_newPhotosKey}_$page';
-  static String keyForPopular(int page) => '${_popularPhotosKey}_$page';
-  static String keyForDetail(int id) => '${_photoDetailKey}_$id';
+  @override
+  String keyForNew(int page) => '${_newPhotosKey}_$page';
+
+  @override
+  String keyForPopular(int page) => '${_popularPhotosKey}_$page';
+
+  String _keyForDetail(int id) => '${_photoDetailKey}_$id';
 
   @override
   Future<List<PhotoModel>> getCachedPhotos(String key) async {
@@ -46,7 +52,7 @@ class GalleryLocalDataSourceImpl implements GalleryLocalDataSource {
 
   @override
   Future<PhotoModel> getCachedPhoto(int id) async {
-    final jsonStr = _box.get(keyForDetail(id));
+    final jsonStr = _box.get(_keyForDetail(id));
     if (jsonStr == null) throw const CacheException();
 
     final data = json.decode(jsonStr) as Map<String, dynamic>;
@@ -56,7 +62,7 @@ class GalleryLocalDataSourceImpl implements GalleryLocalDataSource {
   @override
   Future<void> cachePhoto(PhotoModel photo) async {
     final jsonStr = json.encode(photo.toJson());
-    await _box.put(keyForDetail(photo.id), jsonStr);
+    await _box.put(_keyForDetail(photo.id), jsonStr);
   }
 
   @override

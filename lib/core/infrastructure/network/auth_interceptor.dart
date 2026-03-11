@@ -1,14 +1,16 @@
 import 'package:dio/dio.dart';
 import 'package:webant_gallery/core/utils/api_constants.dart';
+import 'package:webant_gallery/core/utils/logger.dart';
 import 'package:webant_gallery/features/auth/infrastructure/repos/token_manager.dart';
 
 class AuthInterceptor extends Interceptor {
   final TokenManager _tokenManager;
+  final Dio _dio;
 
-  AuthInterceptor(this._tokenManager);
+  AuthInterceptor(this._tokenManager, this._dio);
 
   @override
-  void onRequest(
+  Future<void> onRequest(
     RequestOptions options,
     RequestInterceptorHandler handler,
   ) async {
@@ -27,7 +29,7 @@ class AuthInterceptor extends Interceptor {
   }
 
   @override
-  void onError(DioException err, ErrorInterceptorHandler handler) async {
+  Future<void> onError(DioException err, ErrorInterceptorHandler handler) async {
     if (err.response?.statusCode == 401 &&
         !_isPublicEndpoint(err.requestOptions)) {
       try {
@@ -35,9 +37,11 @@ class AuthInterceptor extends Interceptor {
         final opts = err.requestOptions;
         opts.headers['Authorization'] = 'Bearer $token';
 
-        final response = await Dio().fetch(opts);
+        final response = await _dio.fetch(opts);
         return handler.resolve(response);
       } catch (_) {
+        AppLogger.error('Token refresh failed on 401, signing out');
+        await _tokenManager.signOut();
         return handler.next(err);
       }
     }

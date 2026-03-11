@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:webant_gallery/core/presentation/router/app_router.dart';
 import 'package:webant_gallery/core/presentation/theme/app_theme.dart';
+import 'package:webant_gallery/core/presentation/widgets/app_loading_indicator.dart';
 import 'package:webant_gallery/core/presentation/widgets/error_widget.dart';
 import 'package:webant_gallery/core/presentation/widgets/no_connection_widget.dart';
 import 'package:webant_gallery/features/gallery/domain/entities/photo.dart';
@@ -57,12 +58,13 @@ class _PhotoListPageState extends State<PhotoListPage>
         return RefreshIndicator(
           color: AppColors.primary,
           onRefresh: () async {
-            context.read<PhotoListBloc>().add(const PhotoListRefreshed());
-            await context.read<PhotoListBloc>().stream.firstWhere(
-                  (s) =>
-                      s.status != PhotoListStatus.loading &&
-                      s.status != PhotoListStatus.loadingMore,
-                );
+            final bloc = context.read<PhotoListBloc>();
+            bloc.add(const PhotoListRefreshed());
+            await bloc.stream.firstWhere(
+              (s) =>
+                  s.status != PhotoListStatus.loading &&
+                  s.status != PhotoListStatus.loadingMore,
+            ).timeout(const Duration(seconds: 10), onTimeout: () => bloc.state);
           },
           child: _PhotoGrid(
             photos: state.photos,
@@ -77,27 +79,7 @@ class _PhotoListPageState extends State<PhotoListPage>
   }
 
   Widget _buildLoading() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const SizedBox(
-            width: 36,
-            height: 36,
-            child: CircularProgressIndicator(strokeWidth: 3),
-          ),
-          const SizedBox(height: 12),
-          Text(
-            'Loading...',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w400,
-              color: AppColors.textSecondary,
-            ),
-          ),
-        ],
-      ),
-    );
+    return const AppLoadingIndicator(message: 'Loading...');
   }
 }
 

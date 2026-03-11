@@ -19,6 +19,8 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
   late final TabController _tabController;
+  late final PhotoListBloc _newPhotosBloc;
+  late final PhotoListBloc _popularPhotosBloc;
   int _bottomNavIndex = 0;
 
   @override
@@ -28,11 +30,21 @@ class _HomePageState extends State<HomePage>
     _tabController.addListener(() {
       if (!_tabController.indexIsChanging) setState(() {});
     });
+    _newPhotosBloc = PhotoListBloc(
+      repository: GetIt.I<GalleryRepository>(),
+      type: PhotoListType.newPhotos,
+    );
+    _popularPhotosBloc = PhotoListBloc(
+      repository: GetIt.I<GalleryRepository>(),
+      type: PhotoListType.popularPhotos,
+    );
   }
 
   @override
   void dispose() {
     _tabController.dispose();
+    _newPhotosBloc.close();
+    _popularPhotosBloc.close();
     super.dispose();
   }
 
@@ -62,18 +74,12 @@ class _HomePageState extends State<HomePage>
         return TabBarView(
           controller: _tabController,
           children: [
-            BlocProvider(
-              create: (_) => PhotoListBloc(
-                repository: GetIt.I<GalleryRepository>(),
-                type: PhotoListType.newPhotos,
-              ),
+            BlocProvider.value(
+              value: _newPhotosBloc,
               child: const PhotoListPage(),
             ),
-            BlocProvider(
-              create: (_) => PhotoListBloc(
-                repository: GetIt.I<GalleryRepository>(),
-                type: PhotoListType.popularPhotos,
-              ),
+            BlocProvider.value(
+              value: _popularPhotosBloc,
               child: const PhotoListPage(),
             ),
           ],
